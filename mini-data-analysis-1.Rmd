@@ -81,22 +81,22 @@ And that is exactly the first thing that you will do!
 *Hint:* This is one of those times when you should think about the cleanliness of your analysis. I added a single code chunk for you, but do you want to use more than one? Would you like to write more comments outside of the code chunk?
 
 ```{r}
-## Exploring building_permits dataset ###
+#Exploring building_permits dataset
 class(building_permits)
 dim(building_permits)
 glimpse(building_permits)
 
-### Exploring flow_sample dataset ###
+#Exploring flow_sample dataset
 class(flow_sample)
 dim(flow_sample)
 glimpse(flow_sample)
 
-### Exploring cancer_sample dataset ###
+#Exploring cancer_sample dataset
 class(cancer_sample)
 dim(cancer_sample)
 glimpse(cancer_sample)
 
-### Exploring vancouver_trees dataset ###
+#Exploring vancouver_trees dataset
 class(vancouver_trees)
 dim(vancouver_trees)
 glimpse(vancouver_trees)
@@ -104,7 +104,7 @@ glimpse(vancouver_trees)
 
 1.3 Now that you've explored the 4 datasets that you were initially most interested in, let's narrow it down to 2. What lead you to choose these 2? Briefly explain your choices below, and feel free to include any code in your explanation. 
 
-ANSWER: **I would be most interested to do the flow_sample and vancouver_trees datasets. After using a glimpse() function to explore the datasets, I could see that both of these dataset contain data related to the environment - i.e. data related to the different species of trees and the data on stream/river flows**
+ANSWER: **I would be most interested to explore the flow_sample and vancouver_trees datasets. After using a glimpse() function to look more closely at the datasets, I could conclude that both of these dataset contain data related to the environment - i.e. data related to the different species of trees and the data on stream/river flows. These are the topics I am most interested in personally and professionally, and where I would be able to theoretically explain the correlations between variables if I find any.**
 
 1.4 Time for the final decision! Going back to the beginning, it's important to have an *end goal* in mind. For example, if I had chosen the `titanic` dataset for my project, I might've wanted to explore the relationship between survival and other variables. Try to think of 1 research question that you would want to answer with each dataset. Note them down below, and make your final choice based on what seems more interesting to you!
 
@@ -112,7 +112,7 @@ ANSWER: **Potential research question related to the vancouver_trees dataset: Ho
 
 **Potential research questions related to the flow_sample dataset: What are the patterns of annual variability of the streamflow?**
 
-**I would like to explore flow_sample dataset**
+**I would prefer to explore flow_sample dataset**
 
 
 # Important note
@@ -144,8 +144,11 @@ So far, you have chosen a dataset and gotten familiar with it through exploring 
 
 <!--- *****START HERE***** --->
 
-### Exploring Data and Distribution
-First, the dataset will be converted to a tibble:
+## Exploring Data and Distribution
+
+First, the distribution of data should be explored to gain more understanding on what data the variables store. This would allow to determine, for example, whether the flow variable only stores maximum and minimum extreme events or other flow data.
+
+To explore the data, the dataset shall firstly be converted to a tibble:
 
 ```{r}
 flow_sample <- as_tibble(flow_sample)
@@ -159,7 +162,7 @@ flow_distribution1 = ggplot(flow_sample, aes(flow)) +geom_histogram(bins=30,na.r
 print(flow_distribution1)
 ```
 
-As can be seen from the histogram, the most common values taken by variable "flow" are near-zero values.
+As can be seen from the histogram, the most common values taken by the variable "flow" are near-zero values.
 
 Another way to visualize the distribution of flow values is by **plotting its density**:
 
@@ -169,30 +172,36 @@ print(flow_distribution2)
 ```
 
 As can be seen from the density plot, the majority of values of flow are low - i.e. below 75, however there is an increase in the density around 200, which suggests that there is a considerable amount of values of flow around 200.
-Because of the distribution of the flow data, as well as the fact that data is split at two categorizes "maximum" and "minimum" by the categorical variable "extreme_type", the conclusion may be reached that the data only displays only the extreme flow events.
+
+Based on the observed distribution of the flow data, as well as the fact that data is split in two categories ("maximum" and "minimum") by the categorical variable "extreme_type", the conclusion may be reached that the dataset only displays the extreme flow events.
 
 
-This assumption can be verified by creating a boxplot. The boxplot with a logarithmic scale is plotted to ensure a meaningful visual representation considering the considerable range of values of flow. 
+This assumption can be verified by creating a boxplot. The boxplot with a logarithmic scale is plotted to ensure a meaningful visual representation considering a significant spread of values of flow. 
 
 ```{r}
 flow_boxplot <- ggplot(flow_sample, aes(extreme_type, flow))+ geom_boxplot(width = 0.2)+scale_y_log10()
 print(flow_boxplot)
 ```
 
-The boxplot verified my assumption that the maximum and minimum categories correspond to maximum and minimum extreme flow events.
+The boxplot verified the assumption that the maximum and minimum categories correspond to maximum and minimum extreme flow events.
 
 
-### Exploring Missing Values
+## Exploring Missing Values
 
-First, the tibble should be created containing the number of missing values for each of the variables
+Next, it is also important to explore the missing values in the dataset to understand the limitations of the data and hence develop research questions that can realistically be answered with this dataset.
+
+To explore the missing values, the data frame will be created containing the number of missing values for each of the variables
 
 ```{r}
+#creating a data frame containing names of the variables in the first column and the corresponding number of missing values in the second column
 flow_missing <-data.frame(names(flow_sample), colSums(is.na(flow_sample)))
+
+#Adding meaninful column names:
 names(flow_missing)[1] <- "variable"
 names(flow_missing)[2] <- "missing_val"
 ```
 
-Bar chart can be plotted to represent the missing_values per variable:
+Bar chart can be plotted to represent the number missing values per variable:
 
 ```{r}
 flow_missing_bar = ggplot(flow_missing, aes(variable,missing_val)) + geom_bar(stat="identity")
@@ -200,38 +209,38 @@ print(flow_missing_bar)
 ```
 
 
-As can be seen from the plot, the majority of the missing values are in column "sym". Because of the significant differences in the number of missing data between "sym" and other variables, it is hard to visually assess how many data are missing in other columns. Hence, it may be valuable to look at the plot at logarithmic scale:
+As can be seen from the plot, the majority of the missing values are in column "sym". Because of the significant differences in the number of missing data between "sym" and other variables, it is hard to visually assess how much data is missing in other columns. Hence, it may be valuable to look at the plot at logarithmic scale:
 
 ```{r}
 flow_missing_bar +scale_y_log10()
 ```
 
 
-From this plot it can be derived that vew data is missing from columns "day", "flow", and "month".
+From this plot it can be derived that few data is missing from columns "day", "flow", and "month", while large amont of data is missing for variable "sym"
 
-Because of the large number of missing data in "sym" variable, it will be largely excluded from the analysis in the future.
 
-### Exploring the relation between variables
-I would like to explore the relation between month and extreme flow event. Particularly I would like to see during which months maximum flow usually occur, and during which months minimum flow occur.
+## Exploring the relation between variables
+Next, it would be valuable to explore the relation between month and extreme flow event. Particularly I would like to find during which months the maximum flow usually occurs, and during which months the minimum flow occurs.
 
-#### Creating new tibble holding a subset of flow_sample data
+### Creating new tibble holding a subset of flow_sample data
 
-Firsltm I would like **to create a tibble that will only hold the variables "flow", "month", and "extreme" and will not have any missing data** I will remove missing data after creating a subset to preserve as much data as possible. For example, if I removed the missing data before, I might have removed entire rows, where day or other variable would be missing. This would limit the analysis of the relation between month and flow.
+To achieve this, first, **a tibble should be created that only holds the variables "flow", "month", and "extreme_type" and does not have any missing data**. Missing data will be removed after creating a subset to preserve as much data as possible. For example, if missing data were removed before creating a subset, it may result in a loss of entire rows of data where only "day" or "sym" variables are missing. This would limit the analysis of the relation between month and flow.
 
 ```{r}
+#Creating a subset of the data with columns "month", "flow", and "extreme_type"
 flow_subset <- flow_sample %>%
     select(month, flow, extreme_type) %>%
-    na.omit()
+    na.omit() #removing rows with missing values
 
 print(flow_subset)
 ```
 
 
-Next, I would like to check whether the "month" column is categorical, and if not change its class so it is categorical
+Next, it should be verified whether the "month" column is categorical, and if not its class should be changed accordingly
 
 ```{r}
 class(flow_subset$month) 
-#The column is numeric.
+
 flow_subset$month=as.factor(flow_subset$month) #this formula makes makes the column categorical
 
 #Checking the class again:
@@ -239,9 +248,9 @@ class(flow_subset$month)
 ```
 
 
-#### Exploring the relation between variables month and flow using bar chart
+### Exploring the relation between variables "month" and "flow" using bar chart
 
-To explore how the extreme flow events are distributed across the months, I will create a bar chart.While it will not provide an insight on the magnitude of the individual flow events that have occurred each of the month, it provides an information on the number of extreme flow events that have occurred per month.
+To explore how the extreme flow events are distributed across the months, a bar chart will be created. While a bar char cannot provide an insight on the magnitude of the individual flow events that have occurred during each of the months, it provides a valuable information on the number of extreme flow events that have occurred during each of the months.
 
 The following code plots the bar graph showing the number of the extreme flow events that have occurred each month. The colors differentiate between maximum and minimum flow events:
 
@@ -255,11 +264,11 @@ As can be seen from the bar graph, the majority of the maximum flow events occur
 
 
 
-#### Exploring the characteristics extreme flow events observed in each of the months
+### Exploring the characteristics of the extreme flow events
 
-It may also be valuable to look in more details at the values of flow by each of the month. Hence, as a next step of data analysis, I would like to present the relation between the month and the extreme flow in two graphs: One showing only maximum flow and another showing only minimum flow. This would allow to compare the magnitude of each category of the extreme flow events between the months. 
+It may also be valuable to look in more details at the values of flow observed in each of the months. Hence, as a next step of the data analysis, I would like to present the relation between the month and the extreme flow in two graphs: One showing only maximum flow and another showing only minimum flow. This would allow to gain a better insight into the annual variations in the magnitude of each category of the extreme flow events.
 
-To achieve this, I will firstly create two more subsets: one for extreme_type "minimum" and one for extreme_type "maximum" **using the filter() function**
+To achieve this, two more subsets will be created - one for extreme_type "minimum" and one for extreme_type "maximum" - **using the filter() function**
 
 
 ```{r}
@@ -271,11 +280,11 @@ flow_subset_max <- filter(flow_subset, extreme_type=="maximum")
 
 ```
 
-##### Jitter plot
+#### Jitter plot
 
 **Maximum flow:**
 
-The following graph shows the extreme maximum flow events per months:
+The following graph visualizes the extreme maximum flow events recorded in each of the months:
 
 ```{r}
 flow_max_jitter <-ggplot(flow_subset_max, aes(month, flow)) + 
@@ -283,37 +292,49 @@ flow_max_jitter <-ggplot(flow_subset_max, aes(month, flow)) +
 print(flow_max_jitter)
 ```
 
-As can be seen from the graph, the majority and the highest magnitude of the maximum flow events occur in June. May and July have experience a smaller number of maximum flow events. Finally, August have only experienced one maximum flow event.
+As can be seen from the graph, the majority and the highest magnitude of the maximum flow events occur in June. May and July have experienced fewer number of maximum flow events. Finally, August have only experienced one maximum flow event.
 
 **Minimum flow:**
-The following graph shows the extreme minimum flow events per months:
+
+The following graph displays the extreme minimum flow events recorded in each of the months:
 
 ```{r}
 flow_min_jitter <-ggplot(flow_subset_min, aes(month, flow)) + geom_jitter(alpha = 0.4, width=0.2)
 print(flow_min_jitter)
 ```
 
-As can be seen from the graph, minimum flow events occurred in January, February, March, April, November and December. The lowest flow was observed in January, followed by February and March. 
+As can be seen from the graph, minimum flow events occur in January, February, March, April, November and December. The lowest flow was observed in January, followed by February and March. 
 
-##### Booxplot
 
-Another way to visualize the values of flow observed in each of the months is by using boxplot.
+#### Boxplot
+
+Another way to visualize the values of flow observed in each of the months is by plotting boxplot.
 
 ```{r}
 flow_min_boxplot <-ggplot(flow_subset_min, aes(month, flow))+ geom_boxplot(width = 0.2)+scale_y_log10()
 print(flow_min_boxplot)
 ```
 
-As can be seen from the graph, the lowest mean flow was observed in February, while the lowest value even recorded occured in January.
+As can be seen from the boxplot, the lowest mean flow was observed in February, while the lowest value even recorded occurred in January.
 
 
-Next, the same boxplot should be created for maximum flow:
+A similar boxplot can be created for maximum flow:
 ```{r}
 flow_max_boxplot <-ggplot(flow_subset_max, aes(month, flow))+ geom_boxplot(width = 0.2)+scale_y_log10()
 print(flow_max_boxplot)
 ```
 
-As can be seen from the graph, the highest mean of the maximum flow occurred in June. Moreover, June was the month when the highest flow was recorded,
+As can be seen from the boxplot, the highest mean of the maximum flow occurred in June. Moreover, June was the month when the highest flow was recorded,
+
+
+### Research Questions
+1. Have the maximum flow events increased in magnitude or frequency since 1909? 
+
+2. When did the absolute maximum and minimum magnitude of the flow occur?
+
+3. Does the annual distribution of the extreme flow events changed over time? For example, were most of the minimum/maximum that have occurred in past 10 years observed in a similar time than those in 1909-1919 or have the pattern shifted?
+
+4. Have the number of data entries that are estimated or have significant gaps during the day (sym=E or sym=B, respectively) decreased over time?
 
 
 
