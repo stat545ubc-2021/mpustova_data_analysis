@@ -3,59 +3,44 @@ title: "Mini Data Analysis Milestone 2"
 output: git_document 
 ---
 
-*To complete this milestone, you can either edit [this `.rmd` file](https://raw.githubusercontent.com/UBC-STAT/stat545.stat.ubc.ca/master/content/mini-project/mini-project-2.Rmd) directly. Fill in the sections that are commented out with `<!--- start your work here--->`. When you are done, make sure to knit to an `.md` file by changing the output in the YAML header to `github_document`, before submitting a tagged release on canvas.*
-
-# Welcome back to your mini data analysis project!
-
-This time, we will explore more in depth the concept of *tidy data*, and hopefully investigate further into your research questions that you defined in milestone 1.
-
-**NOTE**: The main purpose of the mini data analysis is to integrate what you learn in class in an analysis. Although each milestone provides a framework for you to conduct your analysis, it's possible that you might find the instructions too rigid for your data set. If this is the case, you may deviate from the instructions -- just make sure you're demonstrating a wide range of tools and techniques taught in this class.
-
 Begin by loading your data and the tidyverse package below: 
 
 ```{r, message = FALSE}
-library(datateachr) # <- might contain the data you picked!
-library(tidyverse)
+suppressMessages(library(datateachr)) # <- might contain the data you picked!
+suppressMessages(library(tidyverse))
 ```
 
-# Learning Objectives
-
-By the end of this milestone, you should:
-
-+ Become familiar with manipulating and summarizing your data in tibbles using `dplyr` and `tidyr`, with a research question in mind.
-+ Understand what *tidy* data is, and how to create it. In milestone 3, we will explore when this might be useful.
-+ Generate a reproducible and clear report using R Markdown.
-+ Gain a greater understanding of how to use R to answer research questions about your data.
-
-**Things to keep in mind**
-
-+ Remember to document your code, be explicit about what you are doing, and write notes in this markdown document when you feel that context is required. Create your analysis as if someone else will be reading it! **There will be 2.5 points reserved for reproducibility, readability, and repo organization.**
-
-+ Before working on each task, you should always keep in mind the specific **research question** that you're trying to answer.
 
 # Task 1: Process and summarize your data (15 points)
-
-From milestone 1, you should have an idea of the basic structure of your dataset (e.g. number of rows and columns, class types, etc.). Here, we will start investigating your data more in-depth using various data manipulation functions. 
 
 ### 1.1 (2.5 points) 
 
 First, write out the 4 research questions you defined in milestone 1 were. This will guide your work through milestone 2:
 
+
 <!-------------------------- Start your work below ---------------------------->
-1. **Have the maximum flow events increased in magnitude or frequency since 1909?** 
+
+After the further exploration of data, some of the research questions should be adjusted.
+
+Specifically, the initial version of Question 1 was: *Have the maximum flow events increased in magnitude or frequency since 1909?*. However, the exploration of the dataset showed that onle one maximum and minimum flow event was recorded per year. Hence, one cannot analyze whether the frequency of such events have increased. Therefore, Question 1 was changed to: *Have the maximum and minimum flow events increased in magnitude since 1909?*. The new question focus on both maximum and minimum flow, which additionally adds complexity to the analysis. 
+
+Another question that have been adjusted is Question 4, which initial version was as follows: *Have the number of data entries that are estimated or have significant gaps during the day (sym=E or sym=B, respectively) decreased over time?* First issue that have been found, is that the question had a typo: symbol A, not B corresponds to the estimatates due to significant gaps during the day. Secondly, it has been found, that most of the symbols present in the dataset was "B", which indicates that the streamflow value was estimated with consideration for the presence of ice in the stream. Hence, it may be valuable to include symbols A, B, and E in the analysis. Hence, the new version of the research question is: *Have the number of data entries that are estimated, have significant gaps during the day, or have been affected by the presence of ice (sym=E, sym=A, and sym=B, respectively) decreased over time?*
+
+
+Hence, the final version of the research question is as follows:
+
+
+1. **Have the maximum and minimum flow events increased in magnitude since 1909?**
+
 2. **When did the absolute maximum and minimum magnitude of the flow occur?**
 
 3. **Does the annual distribution of the extreme flow events changed over time? For example, were most of the minimum/maximum that have occurred in past 10 years observed in a similar time than those in 1909-1919 or have the pattern shifted?**
 
-4. **Have the number of data entries that are estimated or have significant gaps during the day (sym=E or sym=B, respectively) decreased over time?**
+4. **Have the number of data entries that are estimated, have significant gaps during the day, or have been affected by the presence of ice (sym=E, sym=A, and sym=B, respectively) decreased over time?**
 
 <!----------------------------------------------------------------------------->
 
 ### 1.2 (10 points)
-
-Now, for each of your four research questions, choose one task from options 1-4 (summarizing), and one other task from 4-8 (graphing). You should have 2 tasks done for each research question (8 total). Make sure it makes sense to do them! (e.g. don't use a numerical variables for a task that needs a categorical variable.). Comment on why each task helps (or doesn't!) answer the corresponding research question. 
-
-Ensure that the output of each operation is printed! 
 
 **Summarizing:**
 
@@ -73,41 +58,48 @@ Ensure that the output of each operation is printed!
 
 Make sure it's clear what research question you are doing each operation for!
 
+
+
+
 <!------------------------- Start your work below ----------------------------->
 
 Before starting the analysis, additional libraries should be loaded:
 
 ```{r}
-library(lubridate)
+suppressMessages(library(lubridate))
 ```
 
-## Question 1: Have the maximum flow events increased in magnitude or frequency since 1909?
 
-After further exploring the dataset, it becomes apparent that only one maximum and one minimum extreme weather event is recorded per each year:
+
+
+
+## Question 1: Have the maximum and minimum flow events increased in magnitude since 1909?
+
+Before starting the analysis, I would like to mention again that the first research question was changed (intitial version was: *Have the maximum flow events increased in magnitude or frequency since 1909?*)
+
+This is due to the face that after further exploring the dataset, it became apparent that only one maximum and one minimum extreme weather event is recorded per each year (as shown in the following code):
+
 ```{r}
-#Ordering the data by ascending year:
-flow_sample_ordered <- flow_sample[order(flow_sample$year), ]
-head(flow_sample_ordered)
-```
+#The following function computes summary statistics showing the number of entries for each year and each extreme type 
 
-The same can be (indirectly) demonstrated by comparing number of years and number of unique values in column year:
+flow_sample_observations <- flow_sample %>%
+    select(year, extreme_type, flow) %>%
+    group_by(year, extreme_type) %>%
+    summarize(n=n())
 
-```{r}
-dim(flow_sample)[1] #this shows the number of rows in the dataset
-length(unique(flow_sample$year)) #shows the number of unique years in the dataset
+print(flow_sample_observations)
 
 ```
-As can be seen the number of rows is twice the number of years, hence confirming the assumption.
 
-*Because of this, the following analysis will be focused on answering only the first part of the research question - i.e. Have the minimum flow events increase in magnitude* 
+
+**Because of this, the following analysis will be focused on answering a revised research question - i.e. Have the maximum and minimum flow events increased in magnitude since 1909?**
 
 
 ### Summarizing
 
-To achieve this, I decided to do the following tasks for this research question: 
-**Create a categorical variable with 3 or more groups from an existing numerical variable. You can use this new variable in the other tasks! *An example: age in years into "child, teen, adult, senior".**
-and
-**Based on two categorical variables, calculate two summary statistics of your choosing:**
+To achieve this, I decided to do the following *summarizing tasks* for this research question:
+1. **Create a categorical variable with 3 or more groups from an existing numerical variable. You can use this new variable in the other tasks! *An example: age in years into "child, teen, adult, senior".**
+2.**Based on two categorical variables, calculate two summary statistics of your choosing:**
 
 Firstly, new categorical data will be created - decade.
 Next, based on the categorical variables "decade" and "extreme_type", the range and mean of the flow will be derived using summary statistics.
@@ -115,7 +107,7 @@ Next, based on the categorical variables "decade" and "extreme_type", the range 
 Looking at the range and mean of the maximum and minimum flow events per each of the decade, I should be able to conclude whether the magnitude of extreme flow events changed over time. 
 
 
-As have been outlined before, I will firstly create a new categorical variable "decade" which will hold information on which decade th data entries correspond to:
+As have been outlined before, I will firstly create a new categorical variable "decade" which will hold information on which decade the data entries correspond to:
 
 ```{r}
 #creating new column "decade":
@@ -543,6 +535,21 @@ Based on the definition above, can you identify if your data is tidy or untidy? 
 <!--------------------------- Start your work below --------------------------->
 
 
+Since the tidyness of data depend on the research question, I will be tidying/untidying data specifically for question 1 - i.e. *Have the maximum flow events increased in magnitude or frequency since 1909?*
+
+To determine whether the data is tidy, it may be valuable to first look at the dataset:
+```{r}
+head(flow_sample)
+```
+
+To answer this question, the **observation** would be a flow value of the maximum and minimum flow events per each of the years. In the presented dataset, such observations correspond to the rows of the dataset.
+
+The **variables** of interest - i.e. year, extreme_type, and flow - are represented as column of the dataset.
+
+Finally, each of the cell represent the **value** corresponding to these variables - values that can be used to answer the research question.
+
+Therefore, it may be concluded that the dataset is in a tidy form for this research question. 
+
 <!----------------------------------------------------------------------------->
 
 ### 2.2 (5 points)
@@ -555,6 +562,73 @@ Be sure to explain your reasoning for this task. Show us the "before" and "after
 
 <!--------------------------- Start your work below --------------------------->
 
+#### Untidying data
+
+In the following section, I will untidy the dataset. Specifically, I will create new columns from the categorical variable "extreme_type", which will contain values of flow. 
+
+It is important to note, however, that there might be problems tidying this data. This is due to the fact that when I will re-create variable "extreme_type", it will consist of the double the amount of rows. For example, my original dataset has a row that shows that in 7th day of 7th months of 1909, there was a maximum extreme type of event recorded with a flow value of 314. After, I will untidy the dataset by putting "maximum" and "minimum" categories as separate variables/columns and tidy it again, I will have one more column created per each observation. For example, I will have another row that shows that in 7th day of 7th months of 1909, there was a maximum extreme type of event recorded with a missing value. This is due to the fact that maximum and minimum extreme type events cannot occur on the same date. THis could be fixed by removing rows where the flow value is missing (NA). However, if the intitial dataset had missing values of flow, they will be removed as well. To avoid that, before untidying my data I will first replace missing values in the column "flow" with the string "missing". When I will be tidying data, this will allow to differentiate between the rows with missing flow value due to the tidying/untidying and due to gaps in the original dataset. Therefore, loss of data will be prevented.
+
+THe following code will create a new variable - flow_sample1 - and substitute all the missing values in column "flow" with the string "missing". New variable was created to leave the original dataset intact.
+
+```{r}
+#Creating a copy of the dataset:
+flow_sample1 <- flow_sample
+
+#The following code substitutes missing values of flow with "missing":
+flow_sample1$flow[is.na(flow_sample1$flow)] <- "missing"
+
+```
+
+
+Now, the dataset shall be untidied by creating new columns for each type of the extreme type, which will hold the values of flow:
+
+```{r}
+flow_sample_untidy <- flow_sample1 %>%
+  pivot_wider(id_cols = c(-extreme_type, -flow), 
+                names_from = extreme_type,
+                values_from = flow)
+print(flow_sample_untidy)
+```
+
+This dataset is not tidy for research question 1, because **each row does not represent represent each instance of observation** - i.e.  a flow value of the maximum and minimum flow events per each of the years. In the presented dataset, such observations correspond to the rows of the dataset.
+
+
+
+#### Tidying data
+
+Next, I will tidy the date by creating the column "extreme_type", which will store information on whether a certain recorded flow belonged to "minimum" or "maximum" category:
+
+```{r}
+flow_sample_tidy <- flow_sample_untidy %>%
+  pivot_longer(cols = c(-station_id, -year, -month, -day, -sym),
+               names_to = 'extreme_type',
+               values_to = 'flow')
+print(flow_sample_tidy)
+
+```
+
+As have been mentioned before, the obtained dataset has double the number of rows due to the fact that two extreme type events (maximum and minimum) could not have occured on the same day, month, and year. 
+
+
+To return it to its original ("tidy") version, the missing values of flow that were created due to tidying/untidying shall be removed. Following that I will substitute the values of flow that were missing in the original dataset with logical value. This way no data will be lost.
+
+```{r}
+
+#Removing rows where flow value is missing:
+flow_sample_tidy_clean <- flow_sample_tidy %>%
+  filter(!is.na(flow))
+  
+
+#Substituting missing values from the original dataset back with logical value:
+flow_sample_tidy_clean$flow[flow_sample_tidy_clean$flow == "missing"] <- NA
+
+
+print(flow_sample_tidy_clean)
+```
+
+The resulting dataframe is "tidy". The reasons have been explained in 2.1 (I have re-created the initial dataset).
+
+
 
 <!----------------------------------------------------------------------------->
 
@@ -565,6 +639,10 @@ Now, you should be more familiar with your data, and also have made progress in 
 Try to choose a version of your data that you think will be appropriate to answer these 2 questions in milestone 3. Use between 4 and 8 functions that we've covered so far (i.e. by filtering, cleaning, tidy'ing, dropping irrelvant columns, etc.). 
 
 <!--------------------------- Start your work below --------------------------->
+
+
+
+
 
 
 <!----------------------------------------------------------------------------->
