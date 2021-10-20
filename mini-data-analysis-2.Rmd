@@ -1,6 +1,6 @@
 ---
 title: "Mini Data Analysis Milestone 2"
-output: git_document 
+output: github_document 
 ---
 
 Begin by loading your data and the tidyverse package below: 
@@ -14,17 +14,13 @@ suppressMessages(library(tidyverse))
 # Task 1: Process and summarize your data (15 points)
 
 ### 1.1 (2.5 points) 
-
-First, write out the 4 research questions you defined in milestone 1 were. This will guide your work through milestone 2:
-
-
 <!-------------------------- Start your work below ---------------------------->
 
 After the further exploration of data, some of the research questions should be adjusted.
 
 Specifically, the initial version of Question 1 was: *Have the maximum flow events increased in magnitude or frequency since 1909?*. However, the exploration of the dataset showed that onle one maximum and minimum flow event was recorded per year. Hence, one cannot analyze whether the frequency of such events have increased. Therefore, Question 1 was changed to: *Have the maximum and minimum flow events increased in magnitude since 1909?*. The new question focus on both maximum and minimum flow, which additionally adds complexity to the analysis. 
 
-Another question that have been adjusted is Question 4, which initial version was as follows: *Have the number of data entries that are estimated or have significant gaps during the day (sym=E or sym=B, respectively) decreased over time?* First issue that have been found, is that the question had a typo: symbol A, not B corresponds to the estimatates due to significant gaps during the day. Secondly, it has been found, that most of the symbols present in the dataset was "B", which indicates that the streamflow value was estimated with consideration for the presence of ice in the stream. Hence, it may be valuable to include symbols A, B, and E in the analysis. Hence, the new version of the research question is: *Have the number of data entries that are estimated, have significant gaps during the day, or have been affected by the presence of ice (sym=E, sym=A, and sym=B, respectively) decreased over time?*
+Another question that have been adjusted is Question 4, which initial version was as follows: *Have the number of data entries that are estimated or have significant gaps during the day (sym=E or sym=B, respectively) decreased over time?* First issue that have been found, is that the question had a typo: symbol A, not B, corresponds to the estimates of flow due to significant gaps during the day. Secondly, it has been found, that most of the symbols present in the dataset was "B", which indicates that the streamflow value was estimated with consideration for the presence of ice in the stream. Hence, it may be valuable to include symbols A, B, and E in the analysis. Hence, the new version of the research question is: *Have the number of data entries that are estimated, have significant gaps during the day, or have been affected by the presence of ice (sym=E, sym=A, and sym=B, respectively) decreased over time?*
 
 
 Hence, the final version of the research question is as follows:
@@ -34,7 +30,7 @@ Hence, the final version of the research question is as follows:
 
 2. **When did the absolute maximum and minimum magnitude of the flow occur?**
 
-3. **Does the annual distribution of the extreme flow events changed over time? For example, were most of the minimum/maximum that have occurred in past 10 years observed in a similar time than those in 1909-1919 or have the pattern shifted?**
+3. **Does the annual distribution of the extreme flow events changed over time? For example, were most of the minimum/maximum events that have occurred in past 10 years observed in a similar time than those in 1909-1919 or have the pattern shifted?**
 
 4. **Have the number of data entries that are estimated, have significant gaps during the day, or have been affected by the presence of ice (sym=E, sym=A, and sym=B, respectively) decreased over time?**
 
@@ -42,26 +38,11 @@ Hence, the final version of the research question is as follows:
 
 ### 1.2 (10 points)
 
-**Summarizing:**
-
-1. Compute the *range*, *mean*, and *two other summary statistics* of **one numerical variable** across the groups of **one categorical variable** from your data.
-2. Compute the number of observations for at least one of your categorical variables. Do not use the function `table()`!
-3. Create a categorical variable with 3 or more groups from an existing numerical variable. You can use this new variable in the other tasks! *An example: age in years into "child, teen, adult, senior".*
-4. Based on two categorical variables, calculate two summary statistics of your choosing.
-
-**Graphing:**
-
-5. Create a graph out of summarized variables that has at least two geom layers.
-6. Create a graph of your choosing, make one of the axes logarithmic, and format the axes labels so that they are "pretty" or easier to read. 
-7. Make a graph where it makes sense to customize the alpha transparency.
-8. Create 3 histograms out of summarized variables, with each histogram having different sized bins. Pick the "best" one and explain why it is the best.
-
-Make sure it's clear what research question you are doing each operation for!
-
-
-
-
 <!------------------------- Start your work below ----------------------------->
+
+
+**I would like to note that in the following work I have tried to incorporate as many of the proposed summarizing and graphing task as possible. However, task 4 of graphing did not work for any of the research question. This is due to the fact that my dataset only have one variable which distribution would be valuable to explore - i.e. flow. This variable have been previously explored in Milestone 1 using histogram, hence it did not make sense to complete this task in this milestone.**
+
 
 Before starting the analysis, additional libraries should be loaded:
 
@@ -72,12 +53,11 @@ suppressMessages(library(lubridate))
 
 
 
-
 ## Question 1: Have the maximum and minimum flow events increased in magnitude since 1909?
 
 Before starting the analysis, I would like to mention again that the first research question was changed (initial version was: *Have the maximum flow events increased in magnitude or frequency since 1909?*)
 
-This is due to the face that after further exploring the dataset, it became apparent that only one maximum and one minimum extreme weather event is recorded per each year (as shown in the following code):
+This is due to the fact that after further exploring the dataset, it became apparent that only one maximum and one minimum extreme weather event is recorded per each year (as shown in the following code):
 
 ```{r}
 #The following function computes summary statistics showing the number of entries for each year and each extreme type 
@@ -98,8 +78,12 @@ print(flow_sample_observations)
 ### Summarizing
 
 To achieve this, I decided to do the following *summarizing tasks* for this research question:
-1. **Create a categorical variable with 3 or more groups from an existing numerical variable. You can use this new variable in the other tasks! *An example: age in years into "child, teen, adult, senior".**
-2.**Based on two categorical variables, calculate two summary statistics of your choosing:**
+
+**Create a categorical variable with 3 or more groups from an existing numerical variable. You can use this new variable in the other tasks! An example: age in years into "child, teen, adult, senior".**
+
+and
+
+**Based on two categorical variables, calculate two summary statistics of your choosing:**
 
 Firstly, new categorical data will be created - decade - based on numerical variable "year". Next, based on the categorical variables "decade" and "extreme_type", the range and mean of the flow will be derived using summary statistics.By looking at the range and mean of the maximum and minimum flow events per each of the decade, I should be able to conclude whether the magnitude of extreme flow events changed over time. 
 
@@ -144,7 +128,7 @@ flow_q1_summary <- flow_q1 %>%
   group_by(decade,extreme_type) %>%
   summarize(flow_mean = mean(flow), flow_range = range(flow))
 
-print(flow_summary)
+print(flow_q1_summary)
 
 ```
 
@@ -154,8 +138,11 @@ This summary stastics helps answering the question on whether the magnitude of e
 ### Graphing
 
 I decided to do the following tasks for this research question: 
+
 **Create a graph out of summarized variables that has at least two geom layers.**
+
 and 
+
 **Create a graph of your choosing, make one of the axes logarithmic, and format the axes labels so that they are "pretty" or easier to read.**
 
 By plotting mean and range of flow per decade as two separate geom layer on a single graph, one should be able to see whether there have been changes in the magnitude of flow over time. 
@@ -168,12 +155,12 @@ Logarithmic scale is utilized to ensure that the range of both minimum and maxim
 
 ```{r}
 
-flow_q1_figure <- flow_summary %>%
+flow_q1_figure <- flow_q1_summary %>%
   ggplot(aes(decade, flow_range))+
   geom_point(aes(color=extreme_type))+ #first geom layer
   geom_point(shape=8,aes(decade, flow_mean, color=extreme_type))+ #second geom layer
   scale_y_log10()+ #logarithmic scale
-  labs(y="Streamflow(m3/s)", x="Decades", fill="Extreme Type")+ #changing the labels
+  labs(y="Streamflow (m3/s)", x="Decades", colour="Extreme Type")+ #changing the labels
   coord_flip() #flipping coordinates for better visual representation
 
 #NOTE: units of measurement of flow were obtained from https://www.for.gov.bc.ca/hfd/library/documents/bib100015.pdf
@@ -193,15 +180,24 @@ The figure suggest that magnitude (range of values) of maximum flow events have 
 
 ### Summary
 
-To approach this question, I will do the following task: **Compute the range, mean, and two other summary statistics of one numerical variable across the groups of one categorical variable from your data.**
+To approach this question, I will do the following task: 
+
+**Compute the range, mean, and two other summary statistics of one numerical variable across the groups of one categorical variable from your data.**
 
 Based on the categorical variable "extreme type", a summary statistics will be computed including: 
+
 1. mean
+
 2. range
+
 3. median
+
 4. standard deviation
+
 5. maximum
+
 6. minimum
+
 7. number of observations
 
 This will, firstly, allow to determine absolute maximum and minimum value of flow on record in this dataset, which is a first step to determining when such event have occurred.
@@ -231,13 +227,18 @@ Computing summary statistics is a first step to answering the research question.
 ### Graphing
 
 To visualize data for this research question, the following tasks will be completed: 
+
 **Make a graph where it makes sense to customize the alpha transparency.**
+
 and
+
 **Create a graph out of summarized variables that has at least two geom layers.**
 
 
 In the following, two graphs will be created: 
+
 1. a graph showing all the data points of "flow" over time. This will allow to determine in which year or decade the absolute minimum and maximum flow have occurred.
+
 2. a graph showing all the data points of "flow" sorted by month. This will allow to determine in which month the absolute maximum and minimum flow have occurred.
 
 
@@ -275,7 +276,8 @@ From the graph, one can derive that the minimum extreme flow occurred around 193
 
 
 
-####Graph2
+#### Graph2
+
 The second graph will show the flow data sorted by month.
 
 To achieve this, firstly, missing values will be filtered out for the columns "flow", "extreme_type", and "month" since the analysis are focused on these values:
@@ -307,7 +309,7 @@ Presented graph shows the values of flow per months. The data encompass all of t
 As can be seen from the graph, the absolute minimum flow occurred in January, while the absolute maximum flow occurred in June. Moreover, it can be derived that the former is an outlier for that month, while the latter is within the minimum range (upper quntile + 1.5IQR). 
 
 
-**To summarize the findings for this research question, the absolute minimum flow (3.62 m3/s) occurred in January, most probably in 1932. The absolute maximum flow (466 m3/6) was observed in June around year 2014. While this partially answers the research question, it would be helpful to conduct further analysis to determine the precise date of both of these events.**
+**To summarize the findings for this research question, the absolute minimum flow (3.62 m3/s) occurred in January, most probably in 1932. The absolute maximum flow (466 m3/s) was observed in June around year 2014. While this partially answers the research question, it would be helpful to conduct further analysis to determine the precise date of both of these events.**
 
 
 
@@ -316,7 +318,9 @@ As can be seen from the graph, the absolute minimum flow occurred in January, wh
 
 ### Summary
 
-To make a progress towards answering this question, the following task will be completed: **Compute the number of observations for at least one of your categorical variables.**
+To make a progress towards answering this question, the following task will be completed:
+
+**Compute the number of observations for at least one of your categorical variables.**
 
 Computing a number of observations of maximum and minimum extreme weather events for decades "1909-1919" and "2000-2018" will help to determine whether there is a sufficient number of data points for future analysis, which will focus on comparing these two decades. 
 
@@ -344,9 +348,11 @@ As can be seen from the tibble, the number of observations are relatively low - 
 
 ### Graphing
 
-To further explore the differences between the extreme flow events observed in 1909-1919 and those in 2010-2018, the following task will be completed: **Create a graph out of summarized variables that has at least two geom layers**
+To further explore the differences between the extreme flow events observed in 1909-1919 and those in 2010-2018, the following task will be completed: 
 
-Two graphs will be created - one for minimum and one for maximum extreme_type - showing the timing of extreme weather events in both of the decades. Timing is defined as a consequential day of the year when the extreme event have occurred. Moreover, the mean of flow and timing for each decade will be plotted to enable comparison.
+**Create a graph out of summarized variables that has at least two geom layers**
+
+Two graphs will be created - one for minimum and one for maximum extreme_type - showing the timing of extreme weather events in both of the decades. Timing is defined as a day of the year when the extreme event have occurred. Moreover, the mean of flow and timing for each decade will be plotted to enable comparison.
 
 To achieve this, firstly, a column will be added to the subset with the information on the day of the year in which the extreme flow have occurred: 
 
@@ -425,7 +431,7 @@ As can be seen from the graph, the timing of the minimum flow have changed signi
 However, by looking at the graph, one should note that one of the minimum flow events in 1909-1919 decade occurred in December, while none of the 2010-2018 occurred in December. This might have skewed the results for 1909-1919 decade hence undermining the analysis. 
 
 
-Finally it's important to note that the number of datapoints for each type of extreme events and each decade is extremely small. To ensure more reliable results, one may consider comparing larger periods of time - e.g. 1909-1960 and 1960-2018.
+Finally it's important to note that the number of datapoints for each type of extreme events and each decade is extremely small. To ensure more reliable results, one may consider comparing larger periods of time, e.g. 1909-1929 and 2000-2018.
 
 
 **To conclude, the presented analysis have successfully answered the research question: The mean of the maximum flow events have shifted between 1909-1919 and 2010-2018, with the later events occurring on average earlier in a year. The minimum flow events were also observed earlier in a year in 2010-2018 decade, as compared 1909-1919.**
@@ -452,7 +458,10 @@ This information is important for future analysis of data.
 
 ### Summarizing
 
-To address the research question, the following task was chosen: **Compute the number of observations for at least one of your categorical variables. Do not use the function table()!**
+To address the research question, the following task was chosen:
+
+**Compute the number of observations for at least one of your categorical variables. Do not use the function table()!**
+
 Specifically, the number of observations of each of the categories of sym per decade will be computed. 
 
 Before conducting the summary statistics, the rows with missing symbols will be removed. An assumption is made that missing symbol means lack of any of the outlined above conditions. It is important to note, however, that this might not be the case and there could be other reasons for gaps in data. Hence, large number of missing data for "sym" variable can constitute a limitation.
@@ -484,9 +493,8 @@ The most popular symbol is "B", which appeared in every decade represented in th
 
 
 ### Graphing
-As for the graphing, none of the proposed tasks could be applied for this research question. 
 
-However, the data in question could be effectively represented using a bar chart, which will be computed in the following.
+**As for the graphing, none of the proposed tasks could be applied for this research question. However, the data in question could be effectively represented using a bar chart, which will be computed in the following.**
 
 
 ```{r}
@@ -527,17 +535,15 @@ Moreover, as can be seen from the graph, there are fluctuations in the number of
 
 ### 1.3 (2.5 points)
 
-Based on the operations that you've completed, how much closer are you to answering your research questions? Think about what aspects of your research questions remain unclear. Can your research questions be refined, now that you've investigated your data a bit more? Which research questions are yielding interesting results?
-
 <!------------------------- Write your answer here ---------------------------->
 
 
-I have managed to make a considerable progress to answering my research questions. I was able to successfully answer question 1, 2, and 4 (the answers that I have obtained can be found in the "conclusions" paragraph in the corresponding sections). 
-Question 3, on the other hand, have not been answered fully. While I was able to determine the month when the absolute maximum and minimum extreme flow have occurred, I could only estimate the year based of the graph. Hence, in the future analysis, I should focus on determining an exact date when these two events have occurred.
+**I have managed to make a considerable progress in answering my research questions.** I was able to successfully answer questions 1, 2, and 4 (the answers that I have obtained can be found in the "conclusions" paragraph in the corresponding sections). 
+Question 3, on the other hand, have not been answered fully. While I was able to determine the month when the absolute maximum and minimum extreme flow have occurred, I could only estimate the year based of the graph. Hence, in the future analysis, I would have focus on determining an exact date when these two events have occurred.
 
-I find that Question 1 and Question 3 yielded the most interesting result. It was interesting to observe that the magnitude of the maximum flow events have increased significantly over time, which could potentially be attributed to climate change and associated increase in the extreme weather events such as flash floods. Moreover, Question 3 confirmed my pre-existing assumptions the annual distribution of the extreme flow events (particularly maximum flow) could have shifted, which can also be attributed to climate change and changing seasonal patters.
+I find that **Question 1 and Question 3 yielded the most interesting result**. It was interesting to observe that the magnitude of the maximum flow events have increased significantly over time, which could potentially be attributed to climate change and associated increase in the extreme weather events such as flash floods. Moreover, Question 3 confirmed my pre-existing assumption that the annual distribution of the extreme flow events (particularly maximum flow) could have shifted over time, which can also be attributed to climate change and changing seasonal patters.
 
-However, as have been previously noted, comparing the annual distribution of the extreme flow events that were observed in 1909-1919 decade and 2010-2018 decade may be associated with limitations due to the few number of observations for each of the decade (only 4-6 observations per decade per each type of the extreme weather events). Hence, it may be valuable to compare 1909-1929 and 2000-2018, or 1909-1939 and 1990-2019 (two or three decades on each end of the dataset, respectively).
+However, as have been previously noted, comparing the annual distribution of the extreme flow events that were observed in 1909-1919 decade and 2010-2018 decade may be associated with limitations due to limited number of observations for each of the decade (only 4-6 observations per decade per each type of the extreme flow events). Hence, it may be valuable to compare 1909-1929 and 2000-2018, or 1909-1939 and 1990-2019 (two or three decades on each end of the dataset, respectively).
 
 Moreover, I found it interesting that in Question 1, no significant change in mean of maximum flow was found between the decades, while there have been a significant difference in range. Perhaps, there could have been a change in the pattern of the maximum flow events that happened in past 5 years, and hence might have not been adequately represented in the decadal mean. 
 
@@ -546,36 +552,25 @@ An increase in the flow value of maximum events can be seen from the following g
 print(flow_date_figure)
 ```
 
-Hence, to further explore this topic, I would like to fit a model in the data for maximum flow events to explore whether there have been any significant changes in this type of the event.
+Hence, to further explore this topic, I would like to fit a model in the data of maximum flow events to explore whether there have been any significant changes in this type of the flow
 
 
 Hence, I would like to continue working on the following research questions:
 
-1. **Have the maximum flow events exhibited a statically significant increase in magnitude since 1909?** Magnitude is defined as a value of flow, as opposed to an increase in frequency. This question can be approached by fitting model in data.
+1. **Have the maximum flow events exhibited a statistically significant increase in magnitude since 1909?** Magnitude is defined as a value of flow, as opposed to an increase in frequency. This question can be approached by fitting model in data.
 
 2. **On what exact date did the absolute maximum and minimum magnitude of the flow occur?** This question is included since the answer was not researched in the presented analysis. 
 
 3. **Is there a significant difference in the annual distribution of the extreme flow events between 1909-1929 and 2000-2018?** 
 
 
+NOTE: I don't think there is a way to refine Question 4, as it have been fully answered and it did not yield any interesting results.
 
 <!----------------------------------------------------------------------------->
 
 # Task 2: Tidy your data (12.5 points)
 
-In this task, we will do several exercises to reshape our data. The goal here is to understand how to do this reshaping with the `tidyr` package.
-
-A reminder of the definition of *tidy* data:
-
-- Each row is an **observation**
-- Each column is a **variable**
-- Each cell is a **value**
-
-*Tidy'ing* data is sometimes necessary because it can simplify computation. Other times it can be nice to organize data so that it can be easier to understand when read manually. 
-
 ### 2.1 (2.5 points)
-
-Based on the definition above, can you identify if your data is tidy or untidy? Go through all your columns, or if you have >8 variables, just pick 8, and explain whether the data is untidy or tidy.
 
 <!--------------------------- Start your work below --------------------------->
 
@@ -594,17 +589,11 @@ The **variables** of interest - i.e. year, extreme_type, and flow - are represen
 
 Finally, each of the cell represent the **value** corresponding to these variables - values that can be used to answer the research question.
 
-**Therefore, it may be concluded that the dataset is in a tidy form for this research question. **
+**Therefore, it may be concluded that the dataset is in a tidy form for this research question.**
 
 <!----------------------------------------------------------------------------->
 
 ### 2.2 (5 points)
-
-Now, if your data is tidy, untidy it! Then, tidy it back to it's original state.
-
-If your data is untidy, then tidy it! Then, untidy it back to it's original state.
-
-Be sure to explain your reasoning for this task. Show us the "before" and "after".
 
 <!--------------------------- Start your work below --------------------------->
 
@@ -612,9 +601,9 @@ Be sure to explain your reasoning for this task. Show us the "before" and "after
 
 In the following section, I will untidy the dataset. Specifically, I will create new columns from the categorical variable "extreme_type", which will contain values of flow. 
 
-It is important to note, however, that there might be problems tidying this data later. This is due to the fact that when I will re-create variable "extreme_type", it will consist of the double the amount of rows. For example, my original dataset has a row that shows that on 7th day of 7th months of 1909, there was a *maximum* extreme type of event recorded with a flow value of 314. After, I will untidy the dataset by putting "maximum" and "minimum" categories as separate variables/columns and tidy it again, I will have one more column created per each observation. For example, I will have another row that shows that on 7th day of 7th months of 1909, there was a *minimum* extreme type of event recorded with a missing value. This is due to the fact that maximum and minimum extreme type events cannot occur on the same date. This could be fixed by removing rows where the flow value is missing (NA). However, if the initial dataset had missing values of flow, they will be removed as well. To avoid that, before untidying my data I will first replace missing values in the column "flow" with the string "missing". When I will be tidying data, this will allow to differentiate between the rows with missing flow value due to the tidying/untidying and due to gaps in the original dataset. Therefore, loss of data will be prevented.
+It is important to note, however, that there might be problems tidying this data later. This is due to the fact that when I will re-create variable "extreme_type", it will consist of the double the amount of rows. For example, my original dataset has a row that shows that on 7th day of 7th months of 1909, there was a **maximum** extreme type of event recorded with a flow value of 314. After, I will untidy the dataset by putting "maximum" and "minimum" categories as separate variables/columns and tidy it again, I will have one more column created per each observation. For example, I will have another row that shows that on 7th day of 7th months of 1909, there was a **minimum** extreme type of event recorded with a missing value. This is due to the fact that maximum and minimum extreme type events cannot occur on the same date. This could be fixed by removing rows where the flow value is missing (NA). However, if the initial dataset had missing values of flow, they will be removed as well. To avoid that, before untidying my data I will first replace missing values in the column "flow" with the string "missing". When I will be tidying data, this will allow to differentiate between the rows with missing flow value due to the tidying/untidying and due to gaps in the original dataset. Therefore, loss of data will be prevented.
 
-The following code will create a new variable - flow_sample1 - and substitute all the missing values in column "flow" with the string "missing". New variable was created to leave the original dataset intact.
+The following code will create a new variable - **flow_sample1** - and substitute all the missing values in column "flow" with the string "missing". New variable was created to leave the original dataset intact.
 
 ```{r}
 #Creating a copy of the dataset:
@@ -672,7 +661,7 @@ flow_sample_tidy_clean$flow[flow_sample_tidy_clean$flow == "missing"] <- NA
 print(flow_sample_tidy_clean)
 ```
 
-The resulting dataframe is "tidy". The reasons have been explained in 2.1 (I have re-created the initial dataset).
+The resulting dataframe is tidy. The reasons have been explained in 2.1 (I have re-created the initial dataset).
 
 
 
@@ -680,15 +669,29 @@ The resulting dataframe is "tidy". The reasons have been explained in 2.1 (I hav
 
 ### 2.3 (5 points)
 
-Now, you should be more familiar with your data, and also have made progress in answering your research questions. Based on your interest, and your analyses, pick 2 of the 4 research questions to continue your analysis in milestone 3, and explain your decision. 
-
-Try to choose a version of your data that you think will be appropriate to answer these 2 questions in milestone 3. Use between 4 and 8 functions that we've covered so far (i.e. by filtering, cleaning, tidy'ing, dropping irrelvant columns, etc.). 
-
 <!--------------------------- Start your work below --------------------------->
-1. **Have the maximum flow events exhibited a statically significant increase in magnitude since 1909?** Magnitude is defined as a value of flow, as opposed to an increase in frequency. This question can be approached by fitting model in data.
+
+In the future analysis, I would like to explore the following research questions:
+
+1. **Have the maximum flow events exhibited a statistically significant increase in magnitude since 1909?** Magnitude is defined as a value of flow, as opposed to an increase in frequency. This question can be approached by fitting model in data.
 
 2. **Is there a significant difference in the annual distribution of the extreme flow events between 1909-1929 and 2000-2018?**
 
+I have chosen these questions, because I believe they can yield most interesting results. I think it is valuable to further explore changes in maximum flow events over time (by fitting models), as it can provide insights on whether maximum flow have changed in response to the changing climate.
+
+Similarly, I think it is important to further explore changes in annual distribution of extreme flow events (taking larger number of observation by comparing 2 oldest and 2 most recent decades in the dataset). This may provide additional insight on whether the maximum flow pattern have shifted due to changing seasonal patters (e.g. major rainfall happening earlier leading to the extreme flow).
+
+For the purpose of future analysis, I will produce a cleaner version of the data (stored as **flow_milestone3_data**). This data set:
+
+* will include only the columns that may be needed to answer the two outlined questions
+
+* will not include rows with missing values in "extreme_type" and "flow" variables. The rows where "month" or "day" is missing are not removed, because it would limit data available to answer question 1
+
+* will be aranged by year, since future analysis will be interested in the changes in flow over time.
+
+* will consist of three additional columns - decade, data, and day of the year - which will enable future analysis 
+
+This will be achieved using the following code:
 
 ```{r}
 flow_milestone3_data <- flow_sample %>%
@@ -724,15 +727,8 @@ head(flow_milestone3_data)
 
 
 
-
-
-
-
-
-
 <!----------------------------------------------------------------------------->
 
-*When you are done, knit an `md` file. This is what we will mark! Make sure to open it and check that everything has knitted correctly before submitting your tagged release.*
 
 ### Attribution
 
