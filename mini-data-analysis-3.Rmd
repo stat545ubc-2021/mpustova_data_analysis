@@ -23,7 +23,7 @@ Research question chosen in milestone 2:
 
 # Exercise 1: Special Data Types
 
-First I will create a new figure that will be modified later in this exercise. The figure will show the flow values for **minimum** extreme type per each of the months using jitter plot and boxplot.
+First I will create a new figure that will be modified later in this exercise. The figure will show the flow values for **minimum** extreme type per each of the months using jitter plot and boxplot. This figure may be useful in answering a potential research question "When do the minimum extreme weather events usually occur?" and "What is the median minimum flow in each of the months"
 
 To plot this figure I will (1) create a subset of the data, which will consist only of the columns month, flow, and extreme_type, (2) filter data so that only minimum extreme type events are left, (3) omit any missing values, (4) convert month variable into a categorical variable. Following this, the graph will be plotted.
 
@@ -75,16 +75,18 @@ The following code will re-order months based on the number of observations corr
 flow_min_reordered <- flow_subset %>%
   mutate(month = fct_infreq(month)) %>% #reorders factor "month"
   ggplot(aes(month, flow)) + 
-  geom_boxplot(alpha = 0.4, width=0.2)+
-  geom_jitter(alpha = 0.4, width=0.2)+
-  labs(y="Streamflow (m3/s)", x="Months no.")
+  geom_boxplot(alpha = 0.4, width=0.2)+ #geom layer 1 
+  geom_jitter(alpha = 0.4, width=0.2)+ #geom layer 2
+  labs(y="Streamflow (m3/s)", x="Months no.") #chaning labels
 
 print(flow_min_reordered)
 
 
 ```
 
-**I chose to re-order months in the descending order, so that my plot shows the months that have the highest number of minimum flow observations first. This allows me to quickly determine which months had the most observations of minimum flow events. Without reordering it was not very clear, and it had to be guessed based on the density of points (which may be challenging if there are similar, but not the same, number of observations).**
+**I chose to re-order months in the descending order, so that my plot shows the months that have the highest number of minimum flow observations first. This allows me to quickly determine which months had the most observations of minimum flow events. Without reordering it was not very clear, and it had to be guessed based on the density of points (which may be challenging if there are two months with similar, but not the same, number of observations).**
+
+**While this task does not directly address the questions posed in this milestone, it could help answering a research question "When do the minimum extreme flow events usually occur?" and to quickly determine what was the median flow on the month when the most minimum extreme flow event occurred historically. This information may facilitate planning for such events, which may be extremely important if there are communities that rely on this stream for their drinking water.**
 
 
 ### Task 3: Exploring week number when minimum flow events occur
@@ -123,7 +125,7 @@ Next, I can derive the number of the week when each of these minimum flow events
 
 ```{r}
 flow_min_week <- flow_min_date %>%
-  mutate(week_number = week(date))
+  mutate(week_number = week(date)) #adding a column with the week number
 
 head(flow_min_week)
   
@@ -133,13 +135,15 @@ Plotting the result
 ```{r}
 flow_min_week_plot <- flow_min_week %>%
   ggplot(aes(week_number, flow)) +
-  geom_point(alpha = 0.2, size=2)+
-  labs(y="Streamflow (m3/s)", x="Week no.")
+  geom_point(alpha = 0.2, size=2)+ #adjusting transparency because of overlap
+  labs(y="Streamflow (m3/s)", x="Week no.") #changing the labels
 
 print(flow_min_week_plot)
 ```
 
-The plot shows which week the minimum flow events have occurred (all years of the dataset are accounted). Week is defined as *the number of complete seven day periods that have occurred between the date and January 1st, plus one.*. This is useful for data analysis as it allows to derive on which weeks of the year the minimum flow events usually occur. This provides more precision as compared to looking at which months these event usually occur (which was the case in the previous graph)
+The plot shows which week the minimum flow events have occurred (all years of the dataset are accounted). Week is defined as *the number of complete seven day periods that have occurred between the date and January 1st, plus one.* 
+
+**This is useful for data analysis as it allows to derive on which weeks of the year the minimum flow events usually occur. This provides more precision as compared to looking at which months these event usually occur (which was the case in the previous graph). Similarly to the previous task, this graph may help to answer a research question "When do the minimum extreme weather events usually occur?"**
 
 
 
@@ -180,6 +184,7 @@ After the subset is created, the linear model will be fitted, exploring the rela
 
 ```{r}
 flow_model <- lm(flow ~ year, flow_subset2.1)
+
 print(flow_model)
 ```
 
@@ -200,14 +205,16 @@ p-value shows the significance of the results. Considering p-value is lower than
 # Exercise 3: Reading and writing data
 
 Creating a folder called *'output'* in the top level of the project folder/repository:
+
 ```{r}
 dir.create(here::here("output"))
 ```
 
 ## 3.1 (5 points)
-In the following, I will retrieve a summary table from Milestone 2 (Exercise 1.2), and write it as a csv file in your `output` folder. 
+In the following, I will retrieve a summary table from Milestone 2 (Exercise 1.2), and write it as a csv file in the `output` folder. 
 
 Retrieving the table from Milestone 2. The presented code was prevously explained in the Milestone 2 (see mini-data_analysis-2.md):
+
 ```{r}
 #creating new column "decade" based on the year:
 flow_sample_decades <- flow_sample %>%
@@ -231,8 +238,6 @@ flow_q1 <- flow_sample_decades %>%
 flow_q1_summary <- flow_q1 %>%
   group_by(decade,extreme_type) %>%
   summarize(flow_mean = mean(flow), flow_range = range(flow))
-
-print(flow_q1_summary)
 
 ```
 
