@@ -13,6 +13,6 @@ The repository was created for mini-data analysis assignments, which are part of
 
 3. **Milestone-3** containing the third and final part of the data analysis.In this part, *forecats* and *lubridate* packages were used to transform/create a meaningful plot. Moreover, the linear model is applied to explore whether the maximum flow events exhibited a statistically significant increase in magnitude since 1909. Milestone 3 creates two outputs, as described below.
 
-4. **output** containing the output of the Milestone-3. It consists of **flow_model.rds** file which holds the linear model created in Milestone 3, as well as **flow_q1_summary.csv**, which holds a summary table from Milestone 2 (Exercise 1.2)
+4. **output** containing the output of the Milestone-3. It consists of **model_flow.rds** file which holds the linear model created in Milestone 3, as well as **flow_summary.csv**, which holds a summary table from Milestone 2 (Exercise 1.2)
 
 **When firstly reading through the data analysis, it is important to read in the correct sequence - i.e. Milestone 1, Milestone 2, and Milestone 3. This is because the Milestones are building on each other: For example, research questions that are posed in one milestone may be answered in other. Moreover, the findings from earlier Milestone can be references in the later Milestones.**
