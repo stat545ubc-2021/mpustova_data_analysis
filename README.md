@@ -15,4 +15,4 @@ The repository was created for mini-data analysis assignments, which are part of
 
 4. **output** containing the output of the Milestone-3. It consists of **model_flow.rds** file which holds the linear model created in Milestone 3, as well as **flow_summary.csv**, which holds a summary table from Milestone 2 (Exercise 1.2)
 
-**When firstly reading through the data analysis, it is important to read in the correct sequence - i.e. Milestone 1, Milestone 2, and Milestone 3. This is because the Milestones are building on each other: For example, research questions that are posed in one milestone may be answered in other. Moreover, the findings from earlier Milestone can be references in the later Milestones.**
+**When firstly reading through the data analysis, it is important to read in the correct sequence - i.e. Milestone 1, Milestone 2, and Milestone 3. This is because the Milestones are building on each other: For example, research questions that are posed in one milestone may be answered in other. Moreover, the findings from earlier Milestone can be referenced in the later Milestones.**
