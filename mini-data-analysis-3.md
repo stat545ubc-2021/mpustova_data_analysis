@@ -72,7 +72,7 @@ each of the months using jitter plot and boxplot.
 ### Task 1: Reordering a factor (month)
 
 The following code will re-order months based on the number of
-observations corresponding to each month in a **descending order** (from
+observations corresponding to this month in a **descending order** (from
 largest to lowest number)
 
 ``` r
@@ -317,7 +317,7 @@ flow_q1_summary <- flow_q1 %>%
 Writing the output into a .csv file in the ‘output’ folder
 
 ``` r
-write_csv(flow_q1_summary, here::here("output", "flow_q1_summary.csv"))
+write_csv(flow_q1_summary, here::here("output", "flow_summary.csv"))
 ```
 
 ## 3.2 (5 points)
@@ -325,13 +325,13 @@ write_csv(flow_q1_summary, here::here("output", "flow_q1_summary.csv"))
 Writing the model object as a R binary file in the *‘output’* folder:
 
 ``` r
-saveRDS(flow_model, here::here("output", "flow_model.rds"))
+saveRDS(flow_model, here::here("output", "model_flow.rds"))
 ```
 
 Reading the model output from RDS file:
 
 ``` r
-readRDS(here::here("output", "flow_model.rds"))
+readRDS(here::here("output", "model_flow.rds"))
 ```
 
     ## 
