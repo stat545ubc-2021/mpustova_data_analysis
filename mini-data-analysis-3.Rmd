@@ -65,7 +65,8 @@ The displayed plot presents  flow values for **minimum** extreme type per each o
 
 ### Task 1: Reordering a factor (month)
 
-The following code will re-order months based on the number of observations corresponding to each month in a **descending order** (from largest to lowest number)
+
+The following code will re-order months based on the number of observations corresponding to this month in a **descending order** (from largest to lowest number)
 
 ```{r}
 
