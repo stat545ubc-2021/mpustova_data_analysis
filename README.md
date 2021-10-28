@@ -1,6 +1,6 @@
 # Data Analysis Margaryta Pustova
 
-The repository was created for mini-data analysis assignments, which are part of the STAT545 course. The mini-analysis is focused on exploring the dataset from The Government of Canada’s Historical Hydrometric Database. This dataset contain the information on the minimum and maximum flow that have been recorded each year since 1909 at a specific stream. It includes information on the year, month, day, extreme type (e.g. maximum or minimum), flow value, and associated symbol (e.g. "E" for estimated value). The project aims to explore the data in this dataset, as well as to pose and answer research questions based on this data.
+The repository was created for mini-data analysis assignments, which are part of the STAT545 course. The mini-analysis is focused on exploring the dataset from The Government of Canada’s Historical Hydrometric Database. This dataset contains the information on the minimum and maximum flow that have been recorded each year since 1909 at a specific stream. It includes information on the year, month, day, extreme type (e.g. maximum or minimum), flow value, and associated symbol (e.g. "E" for estimated value). The project aims to explore the data in this dataset, as well as to pose and answer research questions based on this data.
 
 
 **The repository consist of the following folders:**
